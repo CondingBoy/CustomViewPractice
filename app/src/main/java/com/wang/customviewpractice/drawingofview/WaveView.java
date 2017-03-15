@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -58,6 +59,8 @@ public class WaveView extends View {
             mWavePaint.setColor(mWaveColor);
             typedArray.recycle();
         }
+        //关闭硬件加速
+        setLayerType(View.LAYER_TYPE_SOFTWARE,null);
     }
 
     @Override
@@ -107,6 +110,10 @@ public class WaveView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        int layer = canvas.saveLayer(new RectF(getPaddingLeft(), getPaddingTop(), currentWidth - getPaddingRight(), currentHeight - getPaddingBottom()), mWavePaint, Canvas.ALL_SAVE_FLAG);
+        //绘制dsc层
+        mWavePaint.setStyle(Paint.Style.STROKE);
+
         //重置path
         mWavePath.reset();
         int halfWaveLength = (int) (mWaveLength / 2);
@@ -119,6 +126,10 @@ public class WaveView extends View {
         mWavePath.lineTo(0, currentHeight - getPaddingBottom());
         mWavePath.close();
         canvas.drawPath(mWavePath, mWavePaint);
+        canvas.restoreToCount(layer);
+    }
+    private int getRadius(){
+        return Math.min(currentWidth-getPaddingLeft()-getPaddingRight(),currentHeight-getPaddingBottom()-getPaddingTop());
     }
 
     public void startAnimator() {
