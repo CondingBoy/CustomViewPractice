@@ -4,5 +4,7 @@
         <attr name="waveLength" format="dimension"/>
         <attr name="waveHeight" format="dimension"/>
         <attr name="waveColor" format="color"/>
+        <attr name="maxProgress" format="integer"/>
+        <attr name="currentProgress" format="integer"/>
     </declare-styleable>
 </resources>

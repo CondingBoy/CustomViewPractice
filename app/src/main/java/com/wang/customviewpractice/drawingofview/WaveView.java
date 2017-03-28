@@ -3,10 +3,14 @@ package com.wang.customviewpractice.drawingofview;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -27,8 +31,9 @@ public class WaveView extends View {
     private int currentWidth;
     private int currentHeight;
     private int mOrignY;
-    private Paint mWavePaint;
-    private int mDx;
+    private Paint mWavePaint,dscPaint,mPaint;
+    private int mDx,maxProgress,currentProgress;
+    private ValueAnimator heightAnimator;
 
     public WaveView(Context context) {
         this(context, null);
@@ -48,6 +53,13 @@ public class WaveView extends View {
     private void init(Context context, AttributeSet attrs) {
         mWavePaint = new Paint();
         mWavePaint.setAntiAlias(true);
+        dscPaint = new Paint();
+        dscPaint.setAntiAlias(true);
+        dscPaint.setColor(Color.WHITE);
+        dscPaint.setStyle(Paint.Style.FILL);
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+
         //填充内部和描边
         mWavePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mWavePath = new Path();
@@ -57,6 +69,8 @@ public class WaveView extends View {
             mWaveHeight = typedArray.getDimension(R.styleable.WaveView_waveHeight, 0);
             mWaveColor = typedArray.getColor(R.styleable.WaveView_waveColor, Color.BLUE);
             mWavePaint.setColor(mWaveColor);
+            maxProgress=typedArray.getInteger(R.styleable.WaveView_maxProgress,100);
+            currentProgress=typedArray.getInteger(R.styleable.WaveView_currentProgress,0);
             typedArray.recycle();
         }
         //关闭硬件加速
@@ -100,19 +114,53 @@ public class WaveView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         currentWidth = w;
         currentHeight = h;
-        mOrignY = currentHeight - getPaddingBottom();
-        int toHeight = (int) ((h - getPaddingBottom() - getPaddingTop()) * 0.5f);
+        mOrignY = getRadius();
+        refreshHeightAnimate();
         mDx = 0;
-        startHeightAnimate(toHeight);
         Log.e("TAG", "width:" + currentWidth + ":" + "height:" + currentHeight + ":" + "mOrignY:" + mOrignY);
+    }
+    //刷新动画
+    private void refreshHeightAnimate() {
+
+        float ratio=currentProgress*1.0f/maxProgress;
+//        int toHeight = (int) ((currentHeight - getPaddingBottom() - getPaddingTop()) * ratio);
+        int toHeight= (int) (getRadius()*ratio);
+
+        startHeightAnimate(toHeight);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         int layer = canvas.saveLayer(new RectF(getPaddingLeft(), getPaddingTop(), currentWidth - getPaddingRight(), currentHeight - getPaddingBottom()), mWavePaint, Canvas.ALL_SAVE_FLAG);
-        //绘制dsc层
-        mWavePaint.setStyle(Paint.Style.STROKE);
+        //圆形半径
+        int radius = getRadius();
+        Bitmap dscBmp = getDscLayerBmp(radius,radius);
+        int left = getPaddingLeft()+(currentWidth-getPaddingLeft()-getPaddingRight()-radius)/2;
+        int top = getPaddingTop()+(currentHeight-getPaddingTop()-getPaddingBottom()-radius)/2;
+        canvas.drawBitmap(dscBmp,left,top,mPaint);
+        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        Bitmap srcBmp =getSrcLayerBmp();
+        canvas.drawBitmap(srcBmp,0,top,mPaint);
+        mPaint.setXfermode(null);
+        canvas.restoreToCount(layer);
+    }
+
+    /**
+     * 获取dsc层的图片,图片是一个正方形的内切圆
+     * @return
+     */
+    private Bitmap getDscLayerBmp(int width,int height) {
+        Bitmap dscBm = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(dscBm);
+        canvas.drawCircle(width/2,width/2,width/2,dscPaint);
+        return dscBm;
+    }
+    private Bitmap getSrcLayerBmp(){
+        Bitmap srcBmp =Bitmap.createBitmap(currentWidth,getRadius(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(srcBmp);
+        mWavePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         //重置path
         mWavePath.reset();
@@ -126,8 +174,13 @@ public class WaveView extends View {
         mWavePath.lineTo(0, currentHeight - getPaddingBottom());
         mWavePath.close();
         canvas.drawPath(mWavePath, mWavePaint);
-        canvas.restoreToCount(layer);
+        return srcBmp;
     }
+
+    /**
+     * 获取空间的半径
+     * @return
+     */
     private int getRadius(){
         return Math.min(currentWidth-getPaddingLeft()-getPaddingRight(),currentHeight-getPaddingBottom()-getPaddingTop());
     }
@@ -149,18 +202,30 @@ public class WaveView extends View {
     }
 
     public void startHeightAnimate(int height) {
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(height);
-        valueAnimator.setDuration(3500);
-        valueAnimator.setStartDelay(500);
-        valueAnimator.setInterpolator(new LinearInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        if(heightAnimator!=null&&heightAnimator.isRunning()){
+            heightAnimator.cancel();
+        }
+        heightAnimator = ValueAnimator.ofInt(height);
+        heightAnimator.setDuration(3500);
+        heightAnimator.setStartDelay(500);
+        heightAnimator.setInterpolator(new LinearInterpolator());
+        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 int current = (int) valueAnimator.getAnimatedValue();
-                mOrignY = currentHeight - getPaddingBottom() - current;
+
+                mOrignY = getRadius()-current;
                 postInvalidate();
             }
         });
-        valueAnimator.start();
+        heightAnimator.start();
+    }
+    public void setMaxProgress(int maxProgress){
+        this.maxProgress=maxProgress;
+        refreshHeightAnimate();
+    }
+    public void setCurrentProgress(int currentProgress){
+        this.currentProgress=currentProgress;
+        refreshHeightAnimate();
     }
 }
