@@ -3,6 +3,8 @@ package com.wang.customviewpractice.drawPractice;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.wang.customviewpractice.R;
+
 public class DrawTextTest extends AppCompatActivity {
 
     @Override

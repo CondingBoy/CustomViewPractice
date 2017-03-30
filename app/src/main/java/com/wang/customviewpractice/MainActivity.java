@@ -1,11 +1,13 @@
 package com.wang.customviewpractice;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.wang.customviewpractice.drawPractice.DrawTextTest;
 import com.wang.customviewpractice.drawingofview.WaveView;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                waveView.setCurrentProgress(30);
+                startActivity(new Intent(MainActivity.this, DrawTextTest.class));
             }
         });
     }
