@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.wang.customviewpractice.animatePractice.AnimatePracticeList;
 import com.wang.customviewpractice.drawPractice.DrawTextTest;
 import com.wang.customviewpractice.drawingofview.WaveView;
+import com.wang.customviewpractice.graphicsPracitce.GraphicsListActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, DrawTextTest.class));
+                startActivity(new Intent(MainActivity.this, GraphicsListActivity.class));
             }
         });
     }

@@ -2,7 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wang.customviewpractice">
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
     <application
+        android:name=".AppContext"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +22,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".drawPractice.DrawTextTest"></activity>
+        <activity android:name=".drawPractice.DrawTextTest" />
+        <activity android:name=".animatePractice.AnimatePracticeList" />
+        <activity android:name=".animatePractice.AnimationPractice" />
+        <activity android:name=".animatePractice.ValueAnimatorPracticeActivity" />
+        <activity android:name=".animatePractice.ValueAnimatorPractice2" />
+        <activity android:name=".animatePractice.ValueAnimatorpractice3" />
+        <activity android:name=".animatePractice.ValueAnimatorPractice4" />
+        <activity android:name=".animatePractice.ValueAnimatorPractice5" />
+        <activity android:name=".animatePractice.ObjectAnimatorPractice" />
+        <activity android:name=".animatePractice.AnimatorSetPractice" />
+        <activity android:name=".animatePractice.AnimatorPracticeInXml" />
+        <activity android:name=".animatePractice.AnimatorSetDemo1" />
+        <activity android:name=".animatePractice.LayoutAnimationPractice" />
+        <activity android:name=".graphicsPracitce.GraphicsListActivity" />
+        <activity android:name=".graphicsPracitce.BasicGraphicsPractice" />
+        <activity android:name=".graphicsPracitce.PathAndTextPractice" />
+        <activity android:name=".graphicsPracitce.MovePathActivity" />
+        <activity android:name=".graphicsPracitce.PaintMethod" />
+        <activity android:name=".graphicsPracitce.ColorMetricsActivity" />
+        <activity android:name=".graphicsPracitce.DownloadViewActivity"></activity>
     </application>
 
 </manifest>

@@ -7,4 +7,19 @@
         <attr name="maxProgress" format="integer"/>
         <attr name="currentProgress" format="integer"/>
     </declare-styleable>
+    <declare-styleable name="DownloadView_360">
+        <attr name="start_duration" format="integer"/>
+        <attr name="pre_duration" format="integer"/>
+        <attr name="expand_duration" format="integer"/>
+        <attr name="point_translation_duration" format="integer"/>
+        <attr name="point_rotate_duration" format="integer"/>
+        <attr name="max_progress" format="integer"/>
+        <attr name="m_progress" format="integer"/>
+        <attr name="m_background" format="color"/>
+        <attr name="progress_color" format="color"/>
+        <attr name="m_textSize" format="dimension"/>
+        <attr name="m_textColor" format="color"/>
+        <attr name="normal_text" format="string"/>
+        <attr name="complete_text" format="string"/>
+    </declare-styleable>
 </resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_animator_set_demo1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.wang.customviewpractice.animatePractice.AnimatorSetDemo1">
+
+    <TextView
+        android:id="@+id/tv_item1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#ff0900"
+        android:layout_gravity="bottom|right"
+        />
+    <TextView
+        android:id="@+id/tv_item2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#ffff00"
+        android:layout_gravity="bottom|right"/>
+    <TextView
+        android:id="@+id/tv_item3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#ff00ff"
+        android:layout_gravity="bottom|right"/>
+    <TextView
+        android:id="@+id/tv_item4"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#002aff"
+        android:layout_gravity="bottom|right"/>
+    <TextView
+        android:id="@+id/tv_item5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#ff7b00"
+        android:layout_gravity="bottom|right"/>
+    <TextView
+        android:id="@+id/tv_menu"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00fffb"
+        android:layout_gravity="bottom|right"/>
+
+</FrameLayout>
